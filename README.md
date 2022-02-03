@@ -11,7 +11,7 @@ Fork this repo and add code for a front-end/back-end application of your choice.
 * The application should have static assets (served from disk) as well as dynamic routes (served by the back-end app)
 * The back-end application should have a backing data store such as MySQL, PostgreSQL, MongoDB, Redis, etc.
 
-# Implementing the docker-compose
+# Implementing docker-compose.yml
 
 Once you have your app up and running, you will "dockerize" it by moving each component into a separate container.
 
