@@ -1,0 +1,31 @@
+FROM php:8.0-apache
+
+RUN apt update \
+    && apt install -y \
+    g++ \
+    libicu-dev \
+    libpq-dev \
+    libzip-dev \
+    zip \
+    zlib1g-dev \
+    && docker-php-ext-install \
+    intl \
+    opcache \
+    pdo \
+    pdo_pgsql \
+    pgsql
+
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Add user for laravel application
+RUN groupadd -g 1000 www
+RUN useradd -u 1000 -ms /bin/bash -g www www
+
+# Copy code to /var/www
+COPY --chown=www:www-data . /var/www/laravel
+RUN chown -R www-data:www-data /var/www/laravel/storage && a2enmod rewrite
+
+#Set working directory
+WORKDIR /var/www/laravel
+
+RUN composer install

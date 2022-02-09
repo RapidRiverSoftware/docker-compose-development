@@ -1,0 +1,9 @@
+Dockerfile.dev
+Dockerfile.prod
+# vendor
+.dockerignore
+.git
+.gitignore
+README.md
+.gitattributes
+.editorconfig
