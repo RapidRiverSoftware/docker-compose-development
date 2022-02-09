@@ -1,0 +1,36 @@
+version: "3.9"
+services:
+  back-end:
+    container_name: backend
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    restart: unless-stopped
+    environment:
+      - DB_HOST=database
+      - DB_DATABASE='api'
+      - DB_USERNAME='root'
+      - DB_PASSWORD='root'
+    ports:
+      - 8081:8081
+    volumes:
+      - ./apache/default.conf:/etc/apache2/sites-enabled/000-default.conf
+      - ./apache/ports.conf:/etc/apache2/ports.conf
+    depends_on:
+      - database
+    networks:
+      - app
+  
+  front-end:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+    ports:
+      - 8080:80
+    depends_on:
+      - back-end
+    networks:
+      - app

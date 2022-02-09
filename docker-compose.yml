@@ -1,0 +1,31 @@
+version: "3.9"
+services:
+  back-end:
+    container_name: backend
+    depends_on:
+      - database
+    networks:
+      - app
+  
+  front-end:
+    container_name: frontend
+    tty: true
+    stdin_open: true
+    depends_on:
+      - back-end
+    networks:
+      - app
+  
+  database:
+    container_name: db
+    image: mysql:8.0.0
+    environment:
+      - MYSQL_DATABASE='api'
+      - MYSQL_USER='root'
+      - MYSQL_PASSWORD='root'
+      - MYSQL_ROOT_PASSWORD='root'
+    networks:
+      - app
+networks:
+  app:
+    driver: bridge

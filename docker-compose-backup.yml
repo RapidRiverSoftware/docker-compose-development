@@ -1,0 +1,50 @@
+version: "3.9"
+services:
+  back-end:
+    container_name: backend
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    environment:
+      - DB_HOST=database
+      - DB_DATABASE='api'
+      - DB_USERNAME='root'
+      - DB_PASSWORD='root'
+    ports:
+      - 8000:8000
+    volumes:
+      - ./backend:/app/backend
+      - ./apache/default.conf:/etc/apache2/sites-enabled/000-default.conf
+    depends_on:
+      - database
+    networks:
+      - app
+  
+  front-end:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    tty: true
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend:/app/frontend:ro
+    depends_on:
+      - backend
+    networks:
+      - app
+  
+  database:
+    container_name: db
+    image: mysql:8.0.0
+    environment:
+      - MYSQL_DATABASE='api'
+      - MYSQL_USER='root'
+      - MYSQL_PASSWORD='root'
+      - MYSQL_ROOT_PASSWORD='root'
+    networks:
+      - app
+networks:
+  app:
+    driver: bridge
+   

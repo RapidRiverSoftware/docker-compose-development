@@ -1,0 +1,40 @@
+version: "3.9"
+services:
+  back-end:
+    container_name: backend
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    environment:
+      - DB_HOST=database
+      - DB_DATABASE='api'
+      - DB_USERNAME='root'
+      - DB_PASSWORD='root'
+    ports:
+      - 8000:8000
+    volumes:
+      - ./backend:/app/backend
+      - ./apache/default.conf:/etc/apache2/sites-enabled/000-default.conf
+    depends_on:
+      - database
+    networks:
+      - app
+  
+  front-end:
+    container_name: frontend
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    tty: true
+    stdin_open: true
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend:/app/frontend
+    environment:
+      - REACT_APP_API_URL=http://127.0.0.1:8000/api/v1/quote/random
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - back-end
+    networks:
+      - app
